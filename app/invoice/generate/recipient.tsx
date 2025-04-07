@@ -7,46 +7,38 @@ import CustomButton from '~/components/CustomButton';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router } from 'expo-router';
 
-const senderFormSchema = z.object({
-  senderName: z.string().min(1, 'Sender Name is required'),
+const recipientFormSchema = z.object({
+  recipientName: z.string().min(1, 'recipient Name is required'),
   address: z.string().min(1, 'Address is required'),
   taxId: z.string().min(1, 'Tax ID is required'),
 });
 
-type senderFormData = z.infer<typeof senderFormSchema>;
+type recipientFormData = z.infer<typeof recipientFormSchema>;
 
 const InvoiceGenerator = () => {
-  const form = useForm<senderFormData>({
-    resolver: zodResolver(senderFormSchema),
+  const form = useForm<recipientFormData>({
+    resolver: zodResolver(recipientFormSchema),
     defaultValues: {
-      senderName: 'beki',
-      address: 'bole',
-      taxId: '12345',
+      recipientName: 'kobeki',
+      address: 'meg',
+      taxId: '12345678',
     },
   });
   const { control, handleSubmit } = form;
-  const [formData, setFormData] = useState({
-    name: '',
-    address: '',
-    taxid: '',
-    amount: '',
-    description: '',
-  });
+
   const onSubmit = (data: any) => {
     console.log(data);
-    router.push('/invoice/generate/recipient');
   };
   return (
     <View className="flex-1">
       <KeyboardAwareScrollView>
         <FormProvider {...form}>
           <View className="px-4">
-            <Text className="mb-6 text-2xl font-bold">Sender Info</Text>
+            <Text className="mb-6 text-2xl font-bold">Recipient Info</Text>
 
             <View className="space-y-4 pb-24">
-              <CustomInputField label="Sender Name" name="senderName" control={control} />
+              <CustomInputField label="recipient Name" name="recipientName" control={control} />
 
               <CustomInputField label="Address Name" control={control} name="address" />
 
