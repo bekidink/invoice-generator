@@ -1,15 +1,13 @@
-import { Control, Controller, useController } from 'react-hook-form';
+import {  useController } from 'react-hook-form';
 import { TextInput, TextInputProps, View, Text } from 'react-native';
 
 type CustomInputFieldProps = {
   label: string;
   name: string;
-  control: Control<any>;
 } & TextInputProps;
 export default function CustomInputField({
   label,
   name,
-  control,
   ...props
 }: CustomInputFieldProps) {
   const {

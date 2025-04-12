@@ -2,8 +2,23 @@ import { TouchableOpacity, Text, TouchableOpacityProps } from 'react-native';
 
 type CustomButtonProps = {
   title: string;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'link';
 } & TouchableOpacityProps;
+
+const variantStyles = {
+  primary: {
+    button: 'bg-blue-500 rounded-md items-center p-4',
+    text: 'text-white',
+  },
+  secondary: {
+    button: 'bg-transparent border border-blue-500 rounded-md items-center p-4',
+    text: 'text-blue-500',
+  },
+  link: {
+    button: 'bg-transparent items-center p-4',
+    text: 'text-blue-500 text-lg font-semibold text-center underline',
+  },
+};
 
 export default function CustomButton({
   title,
@@ -12,17 +27,8 @@ export default function CustomButton({
   ...props
 }: CustomButtonProps) {
   return (
-    <TouchableOpacity
-      className={`rounded-md py-3 ${
-        variant === 'primary' ? 'bg-blue-500' : 'bg-gray-200'
-      } ${className}`}
-      {...props}>
-      <Text
-        className={`text-center font-semibold ${
-          variant === 'primary' ? 'text-white' : 'text-gray-800'
-        }`}>
-        {title}
-      </Text>
+    <TouchableOpacity className={`${variantStyles[variant].button}`} {...props}>
+      <Text className={`${variantStyles[variant].text}`}>{title}</Text>
     </TouchableOpacity>
   );
 }

@@ -1,15 +1,35 @@
 import { create } from 'zustand';
+import {
+  Invoice,
+  invoiceInfoFormData,
+  ItemData,
+  recipientFormData,
+  senderFormData,
+} from '~/schema/invoice';
 
-export interface BearState {
-  bears: number;
-  increasePopulation: () => void;
-  removeAllBears: () => void;
-  updateBears: (newBears: number) => void;
+export interface InvoiceState {
+  newInvoice: Partial<Invoice>;
+  addSenderInfo: (senderInfo: senderFormData) => void;
+  addRecipient: (recipient: recipientFormData) => void;
+  addInvoiceInfo: (invoice: invoiceInfoFormData) => void;
+  addItems: (items: ItemData[]) => void;
+  getSubtotal: () => number;
+  getTotal: () => number;
 }
 
-export const useStore = create<BearState>((set) => ({
-  bears: 0,
-  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-  removeAllBears: () => set({ bears: 0 }),
-  updateBears: (newBears) => set({ bears: newBears }),
+export const useStore = create<InvoiceState>((set, get) => ({
+  newInvoice: {},
+  addSenderInfo: (senderInfo) =>
+    set((state) => ({ newInvoice: { ...state.newInvoice, senderInfo } })),
+  addRecipient: (recipient) => set((state) => ({ newInvoice: { ...state.newInvoice, recipient } })),
+  addInvoiceInfo: (invoice) => set((state) => ({ newInvoice: { ...state.newInvoice, invoice } })),
+  addItems: (items) => set((state) => ({ newInvoice: { ...state.newInvoice, items } })),
+  getSubtotal: () => {
+    const items = get().newInvoice.items || [];
+    return items?.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  },
+  getTotal: () => {
+    const subtotal = get().getSubtotal();
+    return subtotal + 100;
+  },
 }));

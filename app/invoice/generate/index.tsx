@@ -1,21 +1,14 @@
-import { View, Text, ScrollView } from 'react-native';
-import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text } from 'react-native';
+
 import KeyboardAwareScrollView from '~/components/KeyboardAwarScrollView';
 import CustomInputField from '~/components/CustomInputField';
 import CustomButton from '~/components/CustomButton';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { FormProvider, useForm } from 'react-hook-form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from 'expo-router';
-
-const senderFormSchema = z.object({
-  senderName: z.string().min(1, 'Sender Name is required'),
-  address: z.string().min(1, 'Address is required'),
-  taxId: z.string().min(1, 'Tax ID is required'),
-});
-
-type senderFormData = z.infer<typeof senderFormSchema>;
+import { useStore } from '~/store/store';
+import { senderFormData, senderFormSchema } from '~/schema/invoice';
 
 const InvoiceGenerator = () => {
   const form = useForm<senderFormData>({
@@ -26,16 +19,11 @@ const InvoiceGenerator = () => {
       taxId: '12345',
     },
   });
-  const { control, handleSubmit } = form;
-  const [formData, setFormData] = useState({
-    name: '',
-    address: '',
-    taxid: '',
-    amount: '',
-    description: '',
-  });
+  const { addSenderInfo } = useStore();
+  const { handleSubmit } = form;
+
   const onSubmit = (data: any) => {
-    console.log(data);
+    addSenderInfo(data);
     router.push('/invoice/generate/recipient');
   };
   return (
@@ -46,11 +34,11 @@ const InvoiceGenerator = () => {
             <Text className="mb-6 text-2xl font-bold">Sender Info</Text>
 
             <View className="space-y-4 pb-24">
-              <CustomInputField label="Sender Name" name="senderName" control={control} />
+              <CustomInputField label="Sender Name" name="senderName" />
 
-              <CustomInputField label="Address Name" control={control} name="address" />
+              <CustomInputField label="Address Name" name="address" />
 
-              <CustomInputField label="Tax ID" control={control} name="taxId" />
+              <CustomInputField label="Tax ID" name="taxId" />
             </View>
           </View>
 
